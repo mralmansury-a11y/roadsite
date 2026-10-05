@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}{{ site.name }}{% endblock %}</title>
+<link rel="icon" href="{{ url_for('static', filename='img/logo.jpg') }}">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% set ep = request.endpoint %}
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="الشعار">
+    <span><b>{{ site.name }}</b><small>{{ site.en }}</small></span></a>
+  <button class="burger" aria-label="القائمة" onclick="document.getElementById('nv').classList.toggle('open')">☰</button>
+  <nav id="nv"><ul>
+    {% for e,l in [('home','الرئيسية'),('about','من نحن'),('services','خدماتنا'),('news','الأخبار'),('contact','اتصل بنا')] %}
+    <li><a href="{{ url_for(e) }}" class="{{ 'on' if ep==e }}">{{ l }}</a></li>{% endfor %}
+    {% if session.admin %}<li><a href="{{ url_for('dashboard') }}">الإدارة</a></li>{% endif %}
+  </ul></nav>
+</div></header>
+<main>
+{% with m = get_flashed_messages() %}{% if m %}<div class="wrap">{% for x in m %}<div class="flash">{{ x }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+{% block content %}{% endblock %}
+</main>
+<footer><div class="wrap">
+  <div class="cols">
+    <div><h4>{{ site.name }}</h4>جهة رسمية مسؤولة عن تقديم خدمات الطريق الدولي وتأمين سلامة مستخدميه.</div>
+    <div><h4>روابط</h4><a href="{{ url_for('about') }}">من نحن</a><br><a href="{{ url_for('services') }}">خدماتنا</a><br><a href="{{ url_for('news') }}">الأخبار</a></div>
+    <div><h4>تواصل</h4>{{ site.phone }}<br>{{ site.email }}<br>{{ site.address }}</div>
+  </div>
+  <div class="copy">© {{ site.name }} — جميع الحقوق محفوظة · <a href="{{ url_for('login') }}">دخول الإدارة</a></div>
+</div></footer>
+</body></html>

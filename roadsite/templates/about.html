@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}من نحن | {{ site.name }}{% endblock %}
+{% block content %}
+<div class="page-h"><div class="wrap"><h1>من نحن</h1></div></div>
+<section class="s"><div class="wrap split">
+  <div><span class="eyebrow">WHO WE ARE</span><h2>{{ site.name }}</h2>
+    <p>جهة مختصة بإدارة خدمات الطريق الدولي والإشراف عليها، وتعمل على رفع مستوى السلامة والجودة لجميع مستخدمي الطريق.</p>
+    <p>(يمكنك استبدال هذه الفقرة بنبذة رسمية عن الإدارة وتاريخ تأسيسها واختصاصاتها.)</p></div>
+  <div class="panel"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="" style="width:120px;border-radius:12px;background:var(--paper);padding:4px"></div>
+</div></section>
+<section class="s dark"><div class="wrap"><div class="grid">
+  {% for t,b in [('رؤيتنا','طريق دولي آمن ومتطور بخدمات على أعلى مستوى.'),('رسالتنا','تقديم خدمات طريق موثوقة تحمي المسافر وتدعم الحركة والتجارة.'),('قيمنا','المسؤولية، الشفافية، السلامة، الجودة، الاستجابة السريعة.')] %}
+  <div class="panel"><h3 style="color:var(--gold);margin:0 0 6px">{{ t }}</h3>{{ b }}</div>{% endfor %}
+</div></div></section>
+{% endblock %}

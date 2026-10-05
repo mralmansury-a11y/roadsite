@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}لوحة الإدارة{% endblock %}
+{% block content %}<section class="s"><div class="wrap">
+<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center"><h2>لوحة الإدارة</h2>
+<div class="acts"><a class="btn sm" href="{{ url_for('items',kind='news') }}">الأخبار</a><a class="btn sm" href="{{ url_for('items',kind='services') }}">الخدمات</a>
+<form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn sm red">خروج</button></form></div></div>
+<div class="stats"><div class="stat"><b>{{ stats.unread }}</b>رسائل جديدة</div><div class="stat"><b>{{ stats.messages }}</b>كل الرسائل</div>
+<div class="stat"><b>{{ stats.news }}</b>أخبار</div><div class="stat"><b>{{ stats.services }}</b>خدمات</div></div>
+<h3>رسائل التواصل</h3><div class="scroll"><table><tr><th>المرسل</th><th>التواصل</th><th>الرسالة</th><th>التاريخ</th><th></th></tr>
+{% for m in msgs %}<tr class="{{ 'unread' if not m.is_read }}"><td>{{ m.name }}</td><td dir="ltr">{{ m.email }}<br>{{ m.phone }}</td>
+<td><b>{{ m.subject }}</b><br>{{ m.body }}</td><td>{{ m.created[:16] }}</td>
+<td><div class="acts">{% if not m.is_read %}<form method="post" action="{{ url_for('read',i=m.id) }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn sm">مقروءة</button></form>{% endif %}
+<form method="post" action="{{ url_for('delete',kind='messages',i=m.id) }}" onsubmit="return confirm('حذف الرسالة؟')"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn sm red">حذف</button></form></div></td></tr>
+{% else %}<tr><td colspan="5">لا توجد رسائل.</td></tr>{% endfor %}</table></div>
+</div></section>{% endblock %}

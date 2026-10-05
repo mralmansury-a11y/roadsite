@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block title %}اتصل بنا | {{ site.name }}{% endblock %}
+{% block content %}
+<div class="page-h"><div class="wrap"><h1>اتصل بنا</h1></div></div>
+<section class="s"><div class="wrap split" style="align-items:start">
+  <form class="f" method="post"><input type="hidden" name="csrf" value="{{ csrf }}">
+    <div class="two"><div><label>الاسم *</label><input name="name" required maxlength="100"></div>
+      <div><label>رقم الهاتف</label><input name="phone" type="tel" dir="ltr"></div></div>
+    <div><label>البريد الإلكتروني</label><input name="email" type="email" dir="ltr"></div>
+    <div><label>الموضوع</label><input name="subject" maxlength="150"></div>
+    <div><label>الرسالة *</label><textarea name="body" rows="6" required></textarea></div>
+    <button class="btn" type="submit">إرسال</button>
+  </form>
+  <div class="panel"><h3 style="margin:0 0 8px;color:var(--gold)">بيانات التواصل</h3>
+    <ul class="info"><li><small>الهاتف</small><span dir="ltr">{{ site.phone }}</span></li>
+    <li><small>البريد</small>{{ site.email }}</li><li><small>العنوان</small>{{ site.address }}</li>
+    <li><small>ساعات العمل</small>السبت – الخميس، 8 ص – 3 م</li></ul></div>
+</div></section>
+{% endblock %}

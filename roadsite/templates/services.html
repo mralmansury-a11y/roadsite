@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}خدماتنا | {{ site.name }}{% endblock %}
+{% block content %}
+<div class="page-h"><div class="wrap"><h1>خدماتنا</h1></div></div>
+<section class="s"><div class="wrap"><div class="grid">
+{% for s in rows %}<div class="card"><span class="num">0{{ loop.index }}</span><h3>{{ s.title }}</h3><p>{{ s.body }}</p></div>{% else %}<p>لا توجد خدمات حاليًا.</p>{% endfor %}
+</div></div></section>
+{% endblock %}

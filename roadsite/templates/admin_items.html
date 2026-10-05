@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}إدارة {{ label }}{% endblock %}
+{% block content %}<section class="s"><div class="wrap">
+<a href="{{ url_for('dashboard') }}">← اللوحة</a><h2>إدارة {{ label }}</h2>
+<form class="f" method="post" style="margin-bottom:30px"><input type="hidden" name="csrf" value="{{ csrf }}">
+{% if edit %}<input type="hidden" name="id" value="{{ edit.id }}">{% endif %}
+<div><label>العنوان</label><input name="title" required value="{{ edit.title if edit }}"></div>
+<div><label>المحتوى</label><textarea name="body" rows="4" required>{{ edit.body if edit }}</textarea></div>
+<div><button class="btn">{{ 'تحديث' if edit else 'إضافة' }}</button></div></form>
+<div class="scroll"><table><tr><th>العنوان</th><th>المحتوى</th><th></th></tr>
+{% for r in rows %}<tr><td>{{ r.title }}</td><td>{{ r.body[:90] }}</td><td><div class="acts">
+<a class="btn sm" href="{{ url_for('items',kind=kind,edit=r.id) }}">تعديل</a>
+<form method="post" action="{{ url_for('delete',kind=kind,i=r.id) }}" onsubmit="return confirm('تأكيد الحذف؟')"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn sm red">حذف</button></form></div></td></tr>{% endfor %}</table></div>
+</div></section>{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero"><div class="wrap">
+  <div class="eyebrow" style="color:var(--gl)">INTERNATIONAL ROAD · SERVICES</div>
+  <h1>طريق آمن،<br><span>خدمة تليق بالمسافر</span></h1>
+  <p>نعمل على إدارة وتشغيل خدمات الطريق الدولي بكفاءة ومسؤولية، لنضمن رحلة آمنة ومريحة لكل مستخدم.</p>
+  <a class="btn" href="{{ url_for('services') }}">خدماتنا</a><a class="btn ghost" href="{{ url_for('contact') }}">اتصل بنا</a>
+</div><div class="stripe"></div></section>
+
+<section class="s"><div class="wrap">
+  <div class="title"><span class="eyebrow">SERVICES</span><h2>ما نقدمه</h2><p>خدمات متكاملة تغطي الصيانة والسلامة والمراقبة على امتداد الطريق.</p></div>
+  <div class="grid">{% for s in services %}<div class="card"><span class="num">0{{ loop.index }}</span><h3>{{ s.title }}</h3><p>{{ s.body }}</p></div>{% endfor %}</div>
+</div></section>
+
+<section class="s dark"><div class="wrap split">
+  <div><span class="eyebrow" style="color:var(--gold)">ABOUT</span><h2>عن الإدارة</h2>
+    <p style="color:#cfcbc2">تتولى الإدارة الإشراف على الطريق الدولي وتطوير خدماته، التزامًا بمعايير السلامة والجودة وخدمة المجتمع.</p>
+    <a class="btn ghost" style="margin:0" href="{{ url_for('about') }}">اعرف المزيد</a></div>
+  <div class="panel"><b style="color:var(--gold)">رؤيتنا</b><p style="margin:6px 0 0">طريق دولي آمن ومتطور يخدم الجميع بأعلى مستويات الكفاءة.</p></div>
+</div></section>
+
+{% if news %}<section class="s"><div class="wrap">
+  <div class="title"><span class="eyebrow">NEWS</span><h2>آخر الأخبار</h2></div>
+  <div class="grid">{% for n in news %}<div class="card"><time>{{ n.created[:10] }}</time><h3>{{ n.title }}</h3><p>{{ n.body[:140] }}{{ '…' if n.body|length>140 }}</p></div>{% endfor %}</div>
+</div></section>{% endif %}
+
+<section class="cta"><div class="wrap"><h2>لديك استفسار أو بلاغ؟</h2><a class="btn" href="{{ url_for('contact') }}">تواصل معنا</a></div></section>
+{% endblock %}
