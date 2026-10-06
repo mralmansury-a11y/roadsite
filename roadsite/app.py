@@ -63,7 +63,9 @@ def inject():
 def login_required(f):
     @wraps(f)
     def w(*a, **k):
-        if not session.get("admin"):
+        aid = session.get("admin")
+        if not aid or not db().execute("select 1 from admins where id=?", (aid,)).fetchone():
+            session.pop("admin", None)
             return redirect(url_for("login"))
         return f(*a, **k)
     return w
@@ -170,22 +172,6 @@ def read(i):
     db().commit()
     return redirect(url_for("dashboard"))
 
-
-import click, getpass
-
-@app.cli.command("set-admin")
-def set_admin():
-    """تغيير اسم مستخدم وكلمة مرور المدير"""
-    old = input("اسم المستخدم الحالي [admin]: ") or "admin"
-    new = input("اسم المستخدم الجديد: ").strip()
-    pw = getpass.getpass("كلمة المرور الجديدة: ")
-    if not new or len(pw) < 10:
-        raise click.ClickException("اسم فارغ أو كلمة مرور أقل من 10 أحرف")
-    c = sqlite3.connect(DB)
-    n = c.execute("update admins set username=?, pw=? where username=?",
-                  (new, generate_password_hash(pw), old)).rowcount
-    c.commit(); c.close()
-    click.echo("تم التحديث" if n else "لم يُعثر على المستخدم")
 
 
 
