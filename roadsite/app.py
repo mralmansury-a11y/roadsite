@@ -171,6 +171,24 @@ def read(i):
     return redirect(url_for("dashboard"))
 
 
+import click, getpass
+
+@app.cli.command("set-admin")
+def set_admin():
+    """تغيير اسم مستخدم وكلمة مرور المدير"""
+    old = input("اسم المستخدم الحالي [admin]: ") or "admin"
+    new = input("اسم المستخدم الجديد: ").strip()
+    pw = getpass.getpass("كلمة المرور الجديدة: ")
+    if not new or len(pw) < 10:
+        raise click.ClickException("اسم فارغ أو كلمة مرور أقل من 10 أحرف")
+    c = sqlite3.connect(DB)
+    n = c.execute("update admins set username=?, pw=? where username=?",
+                  (new, generate_password_hash(pw), old)).rowcount
+    c.commit(); c.close()
+    click.echo("تم التحديث" if n else "لم يُعثر على المستخدم")
+
+
+
 init_db()
 if __name__ == "__main__":
     app.run(debug=True)
