@@ -174,6 +174,8 @@ def read(i):
 
 
 
+from admin_cli import init_app as init_admin_cli
+init_admin_cli(app, DB)
 
 init_db()
 if __name__ == "__main__":
