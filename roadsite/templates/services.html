@@ -1,7 +1,26 @@
-{% extends "base.html" %}{% block title %}خدماتنا | {{ site.name }}{% endblock %}
+{% extends "base.html" %}{% from "_macros.html" import icon, page_head %}
+{% block title %}خدماتنا | {{ site.name }}{% endblock %}
+{% block description %}خدمات {{ site.name }}: الصيانة والطوارئ، والسلامة المرورية، والمراقبة والتفتيش، والإنارة والنظافة على امتداد الطريق الدولي.{% endblock %}
 {% block content %}
-<div class="page-h"><div class="wrap"><h1>خدماتنا</h1></div></div>
-<section class="s"><div class="wrap"><div class="grid">
-{% for s in rows %}<div class="card"><span class="num">0{{ loop.index }}</span><h3>{{ s.title }}</h3><p>{{ s.body }}</p></div>{% else %}<p>لا توجد خدمات حاليًا.</p>{% endfor %}
-</div></div></section>
+{% set svc_icons = ['tool','shield','eye','light'] %}
+{{ page_head('خدماتنا', 'خدمات التشغيل والصيانة والسلامة المقدَّمة على امتداد الطريق الدولي.') }}
+<section class="sec">
+  <div class="wrap">
+    {% if rows %}
+    <ul class="cards cards-2" role="list">
+      {% for s in rows %}
+      <li class="card svc svc-row">
+        <span class="svc-ico">{{ icon(svc_icons[loop.index0 % 4]) }}</span>
+        <div><h2 class="h3">{{ s.title }}</h2><p>{{ s.body }}</p></div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty">{{ icon('road') }}<h2 class="h3">لا توجد خدمات منشورة حاليًا</h2><p>للاستفسار عن خدمة معيّنة، راسل الإدارة مباشرة.</p><a class="btn" href="{{ url_for('contact') }}">تواصل معنا</a></div>
+    {% endif %}
+  </div>
+</section>
+<section class="band">
+  <div class="wrap band-in"><p>تحتاج خدمة غير مدرجة أو لديك ملاحظة على مستوى خدمة قائمة؟</p><a class="btn btn-dark" href="{{ url_for('contact') }}">راسل الإدارة</a></div>
+</section>
 {% endblock %}

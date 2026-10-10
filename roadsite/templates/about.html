@@ -1,14 +1,41 @@
-{% extends "base.html" %}{% block title %}من نحن | {{ site.name }}{% endblock %}
+{% extends "base.html" %}{% from "_macros.html" import icon, page_head %}
+{% block title %}من نحن | {{ site.name }}{% endblock %}
+{% block description %}تعرّف على {{ site.name }} التابعة للجهاز الوطني للتنمية: الاختصاصات، والرؤية، والرسالة، والقيم.{% endblock %}
 {% block content %}
-<div class="page-h"><div class="wrap"><h1>من نحن</h1></div></div>
-<section class="s"><div class="wrap split">
-  <div><span class="eyebrow">WHO WE ARE</span><h2>{{ site.name }}</h2>
-    <p>جهة مختصة بإدارة خدمات الطريق الدولي والإشراف عليها، وتعمل على رفع مستوى السلامة والجودة لجميع مستخدمي الطريق.</p>
-    <p>(يمكنك استبدال هذه الفقرة بنبذة رسمية عن الإدارة وتاريخ تأسيسها واختصاصاتها.)</p></div>
-  <div class="panel"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="" style="width:120px;border-radius:12px;background:var(--paper);padding:4px"></div>
-</div></section>
-<section class="s dark"><div class="wrap"><div class="grid">
-  {% for t,b in [('رؤيتنا','طريق دولي آمن ومتطور بخدمات على أعلى مستوى.'),('رسالتنا','تقديم خدمات طريق موثوقة تحمي المسافر وتدعم الحركة والتجارة.'),('قيمنا','المسؤولية، الشفافية، السلامة، الجودة، الاستجابة السريعة.')] %}
-  <div class="panel"><h3 style="color:var(--gold);margin:0 0 6px">{{ t }}</h3>{{ b }}</div>{% endfor %}
-</div></div></section>
+{{ page_head('من نحن', 'جهة فنية تتولى تشغيل الطريق الدولي ومرافقه وصيانتها والإشراف عليها.') }}
+
+<section class="sec">
+  <div class="wrap split split-top">
+    <div class="prose">
+      <h2>{{ site.name }}</h2>
+      <p>تعمل الإدارة ضمن الجهاز الوطني للتنمية، وتختص بتخطيط وتطوير وتشغيل وصيانة البنية التحتية والمرافق اللوجستية والخدمية وشبكات التغذية والتحكم على طول مسار الطريق الدولي، إلى جانب إعداد الدراسات الفنية والتنفيذية والاستثمارية المصاحبة للمشاريع.</p>
+      {# عدّل هذه الفقرة بنبذة رسمية عن تاريخ التأسيس والهيكل التنظيمي #}
+      <h3>مجالات الاختصاص</h3>
+      <ul class="ticks" role="list">
+        <li>{{ icon('check') }}تخطيط وتطوير مرافق الطريق الخدمية واللوجستية</li>
+        <li>{{ icon('check') }}تشغيل وصيانة الطريق وشبكات التغذية والتحكم</li>
+        <li>{{ icon('check') }}السلامة المرورية والمراقبة والتفتيش الميداني</li>
+        <li>{{ icon('check') }}الدراسات الفنية والتنفيذية والاستثمارية</li>
+      </ul>
+    </div>
+    <aside class="id-card" aria-label="الهوية">
+      <img src="{{ url_for('static', filename='img/logo-full-480.webp') }}" width="240" height="221" alt="شعار {{ site.name }}" loading="lazy">
+      <div class="marks marks-lg">
+        <img src="{{ url_for('static', filename='img/entity-mark-128.webp') }}" width="56" height="56" alt="شعار الجهاز الوطني للتنمية" loading="lazy">
+        <img src="{{ url_for('static', filename='img/vision-2030-240.webp') }}" width="96" height="68" alt="رؤية ليبيا 2030" loading="lazy">
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="sec sec-dark">
+  <div class="wrap">
+    <h2 class="vh">الرؤية والرسالة والقيم</h2>
+    <ul class="pillars" role="list">
+      {% for t,b in [('رؤيتنا','طريق دولي آمن ومتطور بخدمات على أعلى مستوى.'),('رسالتنا','تقديم خدمات طريق موثوقة تحمي المسافر وتدعم الحركة والتجارة.'),('قيمنا','المسؤولية، الشفافية، السلامة، الجودة، الاستجابة السريعة.')] %}
+      <li><h3>{{ t }}</h3><p>{{ b }}</p></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
 {% endblock %}

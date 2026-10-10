@@ -1,34 +1,110 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{# العنوان والوصف يُعرَّفان في كل صفحة عبر الكتل title و description #}
 <title>{% block title %}{{ site.name }}{% endblock %}</title>
-<link rel="icon" href="{{ url_for('static', filename='img/logo.jpg') }}">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<meta name="description" content="{% block description %}{{ site.name }} — تشغيل وصيانة الطريق الدولي ومرافقه، والسلامة المرورية، والمراقبة الميدانية على امتداد المسار.{% endblock %}">
+<meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+<meta name="theme-color" content="#222327">
+<link rel="canonical" href="{{ request.base_url }}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_LY">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:url" content="{{ request.base_url }}">
+<meta property="og:image" content="{{ url_for('static', filename='img/og-cover.jpg', _external=True) }}">
+<meta name="twitter:card" content="summary_large_image">
+{# الأيقونات #}
+<link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='img/logo-icon-192.png') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+<link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+{# الخط العربي يُحمَّل مسبقًا لتفادي وميض النص #}
+<link rel="preload" href="{{ url_for('static', filename='fonts/cairo-arabic-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ url_for('static', filename='fonts/cairo-arabic-700-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+{% block head %}{% endblock %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script>document.documentElement.classList.add('js')</script>
+<script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
 </head>
-<body>
-{% set ep = request.endpoint %}
-<header class="top"><div class="wrap bar">
-  <a class="brand" href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="الشعار">
-    <span><b>{{ site.name }}</b><small>{{ site.en }}</small></span></a>
-  <button class="burger" aria-label="القائمة" onclick="document.getElementById('nv').classList.toggle('open')">☰</button>
-  <nav id="nv"><ul>
-    {% for e,l in [('home','الرئيسية'),('about','من نحن'),('services','خدماتنا'),('news','الأخبار'),('contact','اتصل بنا')] %}
-    <li><a href="{{ url_for(e) }}" class="{{ 'on' if ep==e }}">{{ l }}</a></li>{% endfor %}
-    {% if session.admin %}<li><a href="{{ url_for('dashboard') }}">الإدارة</a></li>{% endif %}
-  </ul></nav>
-</div></header>
-<main>
-{% with m = get_flashed_messages() %}{% if m %}<div class="wrap">{% for x in m %}<div class="flash">{{ x }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+<body class="{% block body_class %}{% endblock %}">
+{% from "_macros.html" import icon %}{% set ep = request.endpoint %}
+<a class="skip" href="#main">تخطَّ إلى المحتوى</a>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="{{ url_for('home') }}">
+      <img src="{{ url_for('static', filename='img/logo-icon-96.webp') }}" width="48" height="48" alt="">
+      <span><b>{{ site.name }}</b><small dir="ltr">{{ site.en }}</small></span>
+    </a>
+    <button class="burger" type="button" aria-controls="nv" aria-expanded="false" aria-label="فتح القائمة">
+      {{ icon('menu','i-open') }}
+      {{ icon('close','i-close') }}
+    </button>
+    <nav id="nv" class="nav" aria-label="القائمة الرئيسية">
+      <ul>
+        {% for e,l in [('home','الرئيسية'),('about','من نحن'),('services','خدماتنا'),('news','الأخبار'),('contact','اتصل بنا')] %}
+        <li><a href="{{ url_for(e) }}"{% if ep==e %} aria-current="page"{% endif %}>{{ l }}</a></li>
+        {% endfor %}
+        {% if session.admin %}<li><a class="nav-admin" href="{{ url_for('dashboard') }}"{% if ep in ('dashboard','items') %} aria-current="page"{% endif %}>لوحة الإدارة</a></li>{% endif %}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+{# رسائل flash: ما يبدأ بـ "تم" نجاح، وما سواه تنبيه خطأ (app.py لا يمرّر تصنيفًا) #}
+{% with msgs_flash = get_flashed_messages() %}{% if msgs_flash %}
+<div class="wrap flashes">
+  {% for x in msgs_flash %}{% set ok = x.startswith('تم') %}
+  <div class="flash {{ 'ok' if ok else 'err' }}" role="{{ 'status' if ok else 'alert' }}">
+    {{ icon('check' if ok else 'alert') }}
+    <p>{{ x }}</p>
+    <button type="button" class="flash-x" aria-label="إغلاق التنبيه">{{ icon('close') }}</button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}{% endwith %}
+
 {% block content %}{% endblock %}
 </main>
-<footer><div class="wrap">
-  <div class="cols">
-    <div><h4>{{ site.name }}</h4>جهة رسمية مسؤولة عن تقديم خدمات الطريق الدولي وتأمين سلامة مستخدميه.</div>
-    <div><h4>روابط</h4><a href="{{ url_for('about') }}">من نحن</a><br><a href="{{ url_for('services') }}">خدماتنا</a><br><a href="{{ url_for('news') }}">الأخبار</a></div>
-    <div><h4>تواصل</h4>{{ site.phone }}<br>{{ site.email }}<br>{{ site.address }}</div>
+
+<footer class="foot">
+  <div class="lane" aria-hidden="true"></div>
+  <div class="wrap cols">
+    <div class="foot-about">
+      <img src="{{ url_for('static', filename='img/logo-icon-96.webp') }}" width="56" height="56" alt="" loading="lazy">
+      <p><b>{{ site.name }}</b><br>تشغيل الطريق الدولي وصيانته وتأمين سلامة مستخدميه.</p>
+    </div>
+    <nav aria-label="روابط سريعة">
+      <h2 class="foot-h">روابط سريعة</h2>
+      <ul class="foot-links">
+        <li><a href="{{ url_for('about') }}">من نحن</a></li>
+        <li><a href="{{ url_for('services') }}">خدماتنا</a></li>
+        <li><a href="{{ url_for('news') }}">الأخبار والإعلانات</a></li>
+        <li><a href="{{ url_for('contact') }}">تقديم بلاغ أو استفسار</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="foot-h">التواصل</h2>
+      <ul class="foot-contact">
+        <li>{{ icon('phone') }}<a href="tel:{{ site.phone|replace(' ','') }}" dir="ltr">{{ site.phone }}</a></li>
+        <li>{{ icon('mail') }}<a href="mailto:{{ site.email }}" dir="ltr">{{ site.email }}</a></li>
+        <li>{{ icon('pin') }}<span>{{ site.address }}</span></li>
+      </ul>
+    </div>
   </div>
-  <div class="copy">© {{ site.name }} — جميع الحقوق محفوظة · <a href="{{ url_for('login') }}">دخول الإدارة</a></div>
-</div></footer>
-</body></html>
+  <div class="wrap foot-base">
+    <div class="marks" aria-label="الجهة المرجعية">
+      <img src="{{ url_for('static', filename='img/entity-mark-64.webp') }}" width="40" height="40" alt="شعار الجهاز الوطني للتنمية" loading="lazy">
+      <img src="{{ url_for('static', filename='img/vision-2030-120.webp') }}" width="60" height="42" alt="رؤية ليبيا 2030" loading="lazy">
+    </div>
+    <p>© {{ site.name }}. جميع الحقوق محفوظة.</p>
+    <a class="foot-login" href="{{ url_for('login') }}">{{ icon('lock') }}دخول الإدارة</a>
+  </div>
+</footer>
+</body>
+</html>

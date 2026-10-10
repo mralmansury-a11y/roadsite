@@ -1,7 +1,28 @@
-{% extends "base.html" %}{% block title %}دخول الإدارة{% endblock %}
-{% block content %}<section class="s"><div class="wrap" style="max-width:420px">
-<h2>دخول الإدارة</h2>
-<form class="f" method="post"><input type="hidden" name="csrf" value="{{ csrf }}">
-<div><label>اسم المستخدم</label><input name="username" required dir="ltr"></div>
-<div><label>كلمة المرور</label><input name="password" type="password" required dir="ltr"></div>
-<button class="btn">دخول</button></form></div></section>{% endblock %}
+{% extends "base.html" %}{% from "_macros.html" import icon %}
+{% block title %}دخول الإدارة | {{ site.name }}{% endblock %}
+{% block description %}بوابة دخول لوحة إدارة محتوى {{ site.name }}.{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block body_class %}auth{% endblock %}
+{% block content %}
+<section class="sec login">
+  <div class="login-card card">
+    <img class="login-logo" src="{{ url_for('static', filename='img/logo-full-480.webp') }}" width="200" height="184" alt="شعار {{ site.name }}">
+    <h1 class="h2">دخول الإدارة</h1>
+    <p class="form-hint">هذه الصفحة مخصصة لموظفي الإدارة المخوَّلين.</p>
+    <form class="form" method="post">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <div class="field">
+        <label for="l-user">اسم المستخدم</label>
+        <input id="l-user" name="username" required dir="ltr" autocomplete="username" autocapitalize="none" spellcheck="false"
+               value="{{ request.form.get('username','') if request.method == 'POST' }}" {% if request.method != 'POST' %}autofocus{% endif %}>
+      </div>
+      <div class="field">
+        <label for="l-pass">كلمة المرور</label>
+        <input id="l-pass" name="password" type="password" required dir="ltr" autocomplete="current-password" {% if request.method == 'POST' %}autofocus{% endif %}>
+      </div>
+      <button class="btn btn-block" type="submit">{{ icon('lock') }}دخول</button>
+    </form>
+    <a class="link back" href="{{ url_for('home') }}">العودة إلى الموقع</a>
+  </div>
+</section>
+{% endblock %}

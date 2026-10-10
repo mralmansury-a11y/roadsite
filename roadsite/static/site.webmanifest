@@ -1,0 +1,14 @@
+{
+  "name": "إدارة خدمات الطريق الدولي",
+  "short_name": "خدمات الطريق",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f6f5f2",
+  "theme_color": "#222327",
+  "icons": [
+    {"src": "img/logo-icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "img/logo-icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}

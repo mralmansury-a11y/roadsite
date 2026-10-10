@@ -1,7 +1,23 @@
-{% extends "base.html" %}{% block title %}الأخبار | {{ site.name }}{% endblock %}
+{% extends "base.html" %}{% from "_macros.html" import icon, page_head %}
+{% block title %}الأخبار والإعلانات | {{ site.name }}{% endblock %}
+{% block description %}آخر أخبار وإعلانات {{ site.name }} حول أعمال الصيانة، وتحويلات السير، والمشاريع على الطريق الدولي.{% endblock %}
 {% block content %}
-<div class="page-h"><div class="wrap"><h1>الأخبار والإعلانات</h1></div></div>
-<section class="s"><div class="wrap"><div class="grid">
-{% for n in rows %}<article class="card"><time>{{ n.created[:10] }}</time><h3>{{ n.title }}</h3><p>{{ n.body }}</p></article>{% else %}<p>لا توجد أخبار حاليًا.</p>{% endfor %}
-</div></div></section>
+{{ page_head('الأخبار والإعلانات', 'إعلانات الأعمال وتحويلات السير ومستجدات المشاريع على الطريق.') }}
+<section class="sec">
+  <div class="wrap">
+    {% if rows %}
+    <ul class="cards cards-3" role="list">
+      {% for n in rows %}
+      <li class="card post">
+        <time datetime="{{ n.created[:10] }}">{{ icon('calendar') }}{{ n.created[:10] }}</time>
+        <h2 class="h3">{{ n.title }}</h2>
+        <p>{{ n.body }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty">{{ icon('news') }}<h2 class="h3">لا توجد أخبار منشورة حاليًا</h2><p>تُنشر هنا إعلانات الأعمال وتحويلات السير فور صدورها.</p><a class="btn btn-dark" href="{{ url_for('home') }}">العودة إلى الرئيسية</a></div>
+    {% endif %}
+  </div>
+</section>
 {% endblock %}

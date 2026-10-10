@@ -1,28 +1,105 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% from "_macros.html" import icon %}
+{% block title %}{{ site.name }} | الصفحة الرئيسية{% endblock %}
+{% block description %}{{ site.name }}: صيانة الطريق الدولي والاستجابة للطوارئ، والسلامة المرورية، والإنارة والنظافة، والمراقبة الميدانية المستمرة لحالة الطريق ومرافقه.{% endblock %}
+{# صورة القسم الرئيسي هي أكبر عنصر مرئي (LCP) فتُحمَّل مسبقًا #}
+{% block head %}<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+  imagesrcset="{{ url_for('static', filename='img/hero-640.webp') }} 640w, {{ url_for('static', filename='img/hero-1288.webp') }} 1288w" imagesizes="100vw">{% endblock %}
+{% block body_class %}home{% endblock %}
 {% block content %}
-<section class="hero"><div class="wrap">
-  <div class="eyebrow" style="color:var(--gl)">INTERNATIONAL ROAD · SERVICES</div>
-  <h1>طريق آمن،<br><span>خدمة تليق بالمسافر</span></h1>
-  <p>نعمل على إدارة وتشغيل خدمات الطريق الدولي بكفاءة ومسؤولية، لنضمن رحلة آمنة ومريحة لكل مستخدم.</p>
-  <a class="btn" href="{{ url_for('services') }}">خدماتنا</a><a class="btn ghost" href="{{ url_for('contact') }}">اتصل بنا</a>
-</div><div class="stripe"></div></section>
+{% set svc_icons = ['tool','shield','eye','light'] %}
 
-<section class="s"><div class="wrap">
-  <div class="title"><span class="eyebrow">SERVICES</span><h2>ما نقدمه</h2><p>خدمات متكاملة تغطي الصيانة والسلامة والمراقبة على امتداد الطريق.</p></div>
-  <div class="grid">{% for s in services %}<div class="card"><span class="num">0{{ loop.index }}</span><h3>{{ s.title }}</h3><p>{{ s.body }}</p></div>{% endfor %}</div>
-</div></section>
+<section class="hero" aria-labelledby="hero-t">
+  <img class="hero-bg" src="{{ url_for('static', filename='img/hero-1288.webp') }}"
+       srcset="{{ url_for('static', filename='img/hero-640.webp') }} 640w, {{ url_for('static', filename='img/hero-1288.webp') }} 1288w"
+       sizes="100vw" width="1288" height="588" alt="" fetchpriority="high">
+  <div class="wrap hero-in">
+    <div class="hero-txt">
+      <p class="hero-kicker">{{ site.name }}</p>
+      <h1 id="hero-t">طريق آمن،<br>وخدمة تليق بالمسافر</h1>
+      <p class="hero-lead">نشغّل الطريق الدولي ونصونه: صيانة واستجابة للطوارئ، وسلامة مرورية، وإنارة، ومتابعة ميدانية لكل كيلومتر من المسار.</p>
+      <div class="hero-acts">
+        <a class="btn" href="{{ url_for('services') }}">استعرض الخدمات</a>
+        <a class="btn btn-ghost-l" href="{{ url_for('contact') }}">{{ icon('send') }}قدّم بلاغًا</a>
+      </div>
+    </div>
+  </div>
+  <div class="road" aria-hidden="true"><span></span></div>
+</section>
 
-<section class="s dark"><div class="wrap split">
-  <div><span class="eyebrow" style="color:var(--gold)">ABOUT</span><h2>عن الإدارة</h2>
-    <p style="color:#cfcbc2">تتولى الإدارة الإشراف على الطريق الدولي وتطوير خدماته، التزامًا بمعايير السلامة والجودة وخدمة المجتمع.</p>
-    <a class="btn ghost" style="margin:0" href="{{ url_for('about') }}">اعرف المزيد</a></div>
-  <div class="panel"><b style="color:var(--gold)">رؤيتنا</b><p style="margin:6px 0 0">طريق دولي آمن ومتطور يخدم الجميع بأعلى مستويات الكفاءة.</p></div>
-</div></section>
+<section class="sec" aria-labelledby="svc-t">
+  <div class="wrap">
+    <div class="sec-h">
+      <h2 id="svc-t">خدمات الطريق</h2>
+      <p>خدمات تشغيل وصيانة تغطي المسار ومرافقه، من الرصف والإشارات إلى الإنارة والاستجابة للحوادث.</p>
+    </div>
+    {% if services %}
+    <ul class="cards cards-4" role="list">
+      {% for s in services %}
+      <li class="card svc">
+        <span class="svc-ico">{{ icon(svc_icons[loop.index0 % 4]) }}</span>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.body }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="sec-more"><a class="link" href="{{ url_for('services') }}">جميع الخدمات {{ icon('chev') }}</a></p>
+    {% else %}
+    <div class="empty">{{ icon('road') }}<p>ستُعرض الخدمات هنا فور إضافتها.</p></div>
+    {% endif %}
+  </div>
+</section>
 
-{% if news %}<section class="s"><div class="wrap">
-  <div class="title"><span class="eyebrow">NEWS</span><h2>آخر الأخبار</h2></div>
-  <div class="grid">{% for n in news %}<div class="card"><time>{{ n.created[:10] }}</time><h3>{{ n.title }}</h3><p>{{ n.body[:140] }}{{ '…' if n.body|length>140 }}</p></div>{% endfor %}</div>
-</div></section>{% endif %}
+<section class="sec sec-alt" aria-labelledby="about-t">
+  <div class="wrap split">
+    <figure class="photo">
+      <img src="{{ url_for('static', filename='img/supervision-1288.webp') }}"
+           srcset="{{ url_for('static', filename='img/supervision-640.webp') }} 640w, {{ url_for('static', filename='img/supervision-1288.webp') }} 1288w"
+           sizes="(min-width: 768px) 50vw, 100vw" width="1288" height="728" loading="lazy" decoding="async"
+           alt="طريق سريع مزدوج بحارات متعددة وإنارة جانبية وجسر علوي">
+    </figure>
+    <div class="prose">
+      <h2 id="about-t">العناية والإشراف على المسار</h2>
+      <p>تتولى الإدارة، بتبعيتها للجهاز الوطني للتنمية، تخطيط مرافق الطريق الدولي وتشغيلها وصيانتها، والإشراف على شبكات التغذية والتحكم على طول المسار، وفق معايير السلامة والجودة المعتمدة.</p>
+      <ul class="ticks" role="list">
+        <li>{{ icon('check') }}متابعة ميدانية دورية لحالة الرصف والمرافق</li>
+        <li>{{ icon('check') }}استجابة سريعة للحوادث والأعطال</li>
+        <li>{{ icon('check') }}دراسات فنية وتنفيذية للمشاريع المصاحبة</li>
+      </ul>
+      <a class="btn btn-dark" href="{{ url_for('about') }}">تعرّف على الإدارة</a>
+    </div>
+  </div>
+</section>
 
-<section class="cta"><div class="wrap"><h2>لديك استفسار أو بلاغ؟</h2><a class="btn" href="{{ url_for('contact') }}">تواصل معنا</a></div></section>
+{% if news %}
+<section class="sec" aria-labelledby="news-t">
+  <div class="wrap">
+    <div class="sec-h sec-h-row">
+      <h2 id="news-t">آخر الأخبار</h2>
+      <a class="link" href="{{ url_for('news') }}">كل الأخبار {{ icon('chev') }}</a>
+    </div>
+    <ul class="cards cards-3" role="list">
+      {% for n in news %}
+      <li class="card post">
+        <time datetime="{{ n.created[:10] }}">{{ icon('calendar') }}{{ n.created[:10] }}</time>
+        <h3>{{ n.title }}</h3>
+        <p>{{ n.body[:140] }}{{ '…' if n.body|length > 140 }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<section class="cta" aria-labelledby="cta-t">
+  <img class="cta-bg" src="{{ url_for('static', filename='img/desert-road-1280.webp') }}"
+       srcset="{{ url_for('static', filename='img/desert-road-800.webp') }} 800w, {{ url_for('static', filename='img/desert-road-1280.webp') }} 1280w"
+       sizes="100vw" width="1280" height="526" alt="" loading="lazy" decoding="async">
+  <div class="wrap cta-in">
+    <div>
+      <h2 id="cta-t">لاحظت عطلًا أو خطرًا على الطريق؟</h2>
+      <p>أرسل بلاغك مع الموقع التقريبي، وتتابعه الفرق المختصة.</p>
+    </div>
+    <a class="btn" href="{{ url_for('contact') }}">{{ icon('send') }}أرسل بلاغًا</a>
+  </div>
+</section>
 {% endblock %}

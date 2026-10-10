@@ -1,0 +1,20 @@
+{# ماكروهات مشتركة: أيقونة SVG من الملف الموحد، وترويسة الصفحات الداخلية #}
+{% macro icon(name, cls='') -%}
+<svg class="i {{ cls }}" aria-hidden="true" focusable="false"><use href="{{ url_for('static', filename='img/icons.svg') }}#{{ name }}"/></svg>
+{%- endmacro %}
+
+{% macro page_head(title, lead='', crumbs=[]) -%}
+<header class="page-h">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="مسار التنقل">
+      <ol>
+        <li><a href="{{ url_for('home') }}">الرئيسية</a></li>
+        {% for t, href in crumbs %}<li><a href="{{ href }}">{{ t }}</a></li>{% endfor %}
+        <li aria-current="page">{{ title }}</li>
+      </ol>
+    </nav>
+    <h1>{{ title }}</h1>
+    {% if lead %}<p class="lead">{{ lead }}</p>{% endif %}
+  </div>
+</header>
+{%- endmacro %}
